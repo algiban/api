@@ -5,3 +5,4 @@ Pillow
 numpy
 mysql-connector-python
 gdown
+python-dotenv

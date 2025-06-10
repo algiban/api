@@ -8,16 +8,21 @@ from datetime import datetime
 import io
 import os
 import gdown
+from dotenv import load_dotenv
+
+# === LOAD ENV VARIABEL ===
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# === KONFIGURASI DATABASE ===
+# === KONFIGURASI DATABASE (RAILWAY) ===
 db = mysql.connector.connect(
-    host="127.0.0.1",
-    user="root",
-    password="",  # Ganti sesuai password MySQL kamu
-    database="mantapredict"
+    host=os.getenv("DB_HOST"),       # switchyard.proxy.rlwy.net
+    user=os.getenv("DB_USER"),       # root
+    password=os.getenv("DB_PASSWORD"),  # FweVuPItZaBVWjSQtpHZPbJzsLlQjfiG
+    database=os.getenv("DB_NAME"),   # railway
+    port=int(os.getenv("DB_PORT"))   # 36553
 )
 cursor = db.cursor()
 
@@ -34,7 +39,7 @@ if not os.path.exists(MODEL_PATH):
 # Load model
 model = tf.keras.models.load_model(MODEL_PATH)
 
-# === LABEL KELAS (sesuaikan dengan model) ===
+# === LABEL KELAS ===
 labels = [
     'alpukat', 'anggur', 'apel', 'belimbing', 'blueberry', 'buah naga', 'ceri', 'delima', 'duku', 'durian',
     'jambu air', 'jambu biji', 'jeruk', 'kelapa', 'kiwi', 'kurma', 'leci', 'mangga', 'manggis', 'markisa',
@@ -43,7 +48,6 @@ labels = [
 ]
 
 # === ROUTES ===
-
 @app.route('/')
 def index():
     return jsonify({"message": "API prediksi buah aktif!"})
@@ -57,7 +61,7 @@ def predict():
     try:
         file = request.files['image']
         img = Image.open(file.stream).convert('RGB')
-        img = img.resize((224, 224))  # Ukuran harus sesuai input model
+        img = img.resize((224, 224))
         img_array = np.array(img) / 255.0
         img_array = np.expand_dims(img_array, axis=0)
 
@@ -96,7 +100,6 @@ def history():
     ]
 
     return jsonify(result)
-
 
 # === MAIN ===
 if __name__ == '__main__':
