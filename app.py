@@ -17,12 +17,13 @@ app = Flask(__name__)
 CORS(app)
 
 # === KONFIGURASI DATABASE (RAILWAY) ===
+
 db = mysql.connector.connect(
-    host=os.getenv("DB_HOST"),       # switchyard.proxy.rlwy.net
-    user=os.getenv("DB_USER"),       # root
-    password=os.getenv("DB_PASSWORD"),  # FweVuPItZaBVWjSQtpHZPbJzsLlQjfiG
-    database=os.getenv("DB_NAME"),   # railway
-    port=int(os.getenv("DB_PORT"))   # 36553
+    host="switchyard.proxy.rlwy.net",
+    user="root",
+    password="FweVuPItZaBVWjSQtpHZPbJzsLlQjfiG",
+    database="railway",
+    port=36553
 )
 cursor = db.cursor()
 
