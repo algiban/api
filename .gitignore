@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+model/model_buah.h5
+.env
